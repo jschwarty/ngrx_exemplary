@@ -1,7 +1,7 @@
 import {Actions} from '@ngrx/effects';
 import {Action, State, Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
-import {ActivatedRouteSnapshot} from '@angular/router';
+import {ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
 import {ROUTER_NAVIGATION, RouterNavigationAction} from '@ngrx/router-store';
 import {Injectable, Type} from '@angular/core';
 import 'rxjs/add/operator/filter';
@@ -34,7 +34,7 @@ export class StoreNavigation<T> {
 
   navigation(component: Type<any>, opts: HandleNavigationOpts): Observable<any> {
     const nav = this.actions.ofType(ROUTER_NAVIGATION).map(
-      (a: RouterNavigationAction) => findSnapshot(component, a.payload.routerState.root)).
+      (a: RouterNavigationAction<RouterStateSnapshot>) => findSnapshot(component, a.payload.routerState.root)).
       filter(s => !!s);
     return nav.withLatestFrom(this.store).switchMap(a => opts.run(a[0], a[1]).catch(e => wrapIntoObservable(opts.onError(a[0], e))));
   }

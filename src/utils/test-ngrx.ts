@@ -1,7 +1,7 @@
 import {Actions} from '@ngrx/effects';
 import {Action, State, Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
-import {ActivatedRouteSnapshot, Router} from '@angular/router';
+import {ActivatedRouteSnapshot, Router, RouterStateSnapshot} from '@angular/router';
 import {ROUTER_NAVIGATION, RouterNavigationAction} from '@ngrx/router-store';
 import {Injectable, Type} from '@angular/core';
 import 'rxjs/add/operator/filter';
@@ -32,7 +32,9 @@ export class FakeStoreNavigation extends StoreNavigation<any> {
   }
 }
 
-function navigationAction(component: Type<any>, params: {[k: string]: string}, data: {[k: string]: any}): RouterNavigationAction {
+function navigationAction(component: Type<any>,
+                          params: {[k: string]: string}, data: {[k: string]: any}):
+RouterNavigationAction<RouterStateSnapshot> {
   const root = {
     params,
     data,
