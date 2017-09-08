@@ -1,7 +1,7 @@
-<md-card *ngIf="talk">
+<md-card *ngIf="talk$ | async as talk">
   <div id="rating-column">
     Rating
-    <span id="rating">{{talk.rating | formatRating}}</span>
+    <span id="rating">{{talk.rating}}</span>
   </div>
 
   <div>
@@ -12,6 +12,6 @@
       {{talk.description}}
     </div>
 
-    <rate-button [talk]="talk" (rate)="handleRate($event)"></rate-button>
+    <rate-button [talk]="talk" (rate)="handleRate($event, talk.id)"></rate-button>
   </div>
 </md-card>

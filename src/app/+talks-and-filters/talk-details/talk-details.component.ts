@@ -2,6 +2,7 @@ import {Component, Input} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import { Store } from '@ngrx/store';
 import {Talk, TalksAndFilters, TalksAndFiltersState} from '../+state/talks-and-filters.interfaces';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'talk-details-cmp',
@@ -9,20 +10,20 @@ import {Talk, TalksAndFilters, TalksAndFiltersState} from '../+state/talks-and-f
   styleUrls: ['./talk-details.component.css']
 })
 export class TalkDetailsComponent {
-  talk: Talk;
+  talk$: Observable<Talk>;
 
   constructor(private route: ActivatedRoute, private store: Store<TalksAndFiltersState>) {
-    store.select('talks').subscribe(t => {
-      const id = (+route.snapshot.paramMap.get('id'));
-      this.talk = t.talks[id];
-    });
+    this.talk$ = route.paramMap
+      .map(params => params.get('id'))
+      .switchMap(id => store.select('talks')
+        .map(t => t.talks[id]));
   }
 
-  handleRate(newRating: number): void {
+  handleRate(newRating: number, talkId: number): void {
     this.store.dispatch({
       type: 'RATE',
       payload: {
-        talkId: this.talk.id,
+        talkId: talkId,
         rating: newRating
       }
     });
